@@ -1,76 +1,47 @@
 import * as React from "react"
-
+import * as CheckboxPrimitive from "@radix-ui/react-checkbox"
 import { cn } from "@/lib/utils"
+import { CheckIcon } from "@radix-ui/react-icons"
 
-const Card = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
+const Checkbox = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root>
 >(({ className, ...props }, ref) => (
-  <div
+  <CheckboxPrimitive.Root
     ref={ref}
     className={cn(
-      "rounded-xl border border-foreground/10 text-foreground bg-background",
+      "peer h-4 w-4 shrink-0 rounded-sm border border-foreground/30 hover:border-foreground/50 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=checked]:text-primary-foreground",
       className
     )}
     {...props}
-  />
+  >
+    <CheckboxPrimitive.Indicator
+      className={cn("flex items-center justify-center text-current")}
+    >
+      <CheckIcon className="h-4 w-4" />
+    </CheckboxPrimitive.Indicator>
+  </CheckboxPrimitive.Root>
 ))
-Card.displayName = "Card"
+Checkbox.displayName = CheckboxPrimitive.Root.displayName
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
+// Wrapper component that includes a label with primary text color
+const CheckboxWithText = React.forwardRef<
+  React.ElementRef<typeof CheckboxPrimitive.Root>,
+  React.ComponentPropsWithoutRef<typeof CheckboxPrimitive.Root> & {
+    label: string;
+    labelClassName?: string;
+  }
+>(({ className, label, labelClassName, ...props }, ref) => (
+  <div className="flex items-center space-x-2">
+    <Checkbox ref={ref} className={className} {...props} />
+    <label
+      htmlFor={props.id}
+      className={cn("text-sm font-medium text-foreground leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70", labelClassName)}
+    >
+      {label}
+    </label>
+  </div>
 ))
-CardHeader.displayName = "CardHeader"
+CheckboxWithText.displayName = "CheckboxWithText"
 
-const CardTitle = React.forwardRef<
-  HTMLHeadingElement,
-  React.HTMLAttributes<HTMLHeadingElement>
->(({ className, ...props }, ref) => (
-  <h3
-    ref={ref}
-    className={cn("font-semibold text-lg leading-none tracking-tight", className)}
-    {...props}
-  />
-))
-CardTitle.displayName = "CardTitle"
-
-const CardDescription = React.forwardRef<
-  HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn("text-sm text-foreground", className)}
-    {...props}
-  />
-))
-CardDescription.displayName = "CardDescription"
-
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn("p-6 pt-0", className)} {...props} />
-))
-CardContent.displayName = "CardContent"
-
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex items-center p-6 pt-0", className)}
-    {...props}
-  />
-))
-CardFooter.displayName = "CardFooter"
-
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { Checkbox, CheckboxWithText }
